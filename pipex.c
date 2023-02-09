@@ -6,7 +6,7 @@
 /*   By: oryadi <oryadi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/04 23:02:19 by oryadi            #+#    #+#             */
-/*   Updated: 2023/02/10 00:11:45 by oryadi           ###   ########.fr       */
+/*   Updated: 2023/02/10 00:20:51 by oryadi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	main(int argc, char **argv, char **env)
 
 	j = 0;
 	if (argc != 5)
-		exit(1);
+		(ft_putendl_fd("Arguments must be 5", 2), exit(1));
 	pipe(fd.end);
 	path = NULL;
 	fd.infile = open(argv[1], O_RDONLY, 0644);
