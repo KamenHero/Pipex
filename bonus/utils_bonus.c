@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   utils_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: oryadi <oryadi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/02/04 23:03:05 by oryadi            #+#    #+#             */
-/*   Updated: 2023/02/13 21:47:47 by oryadi           ###   ########.fr       */
+/*   Created: 2023/02/11 21:26:41 by oryadi            #+#    #+#             */
+/*   Updated: 2023/02/13 22:12:17 by oryadi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "pipex_bonus.h"
 
 char	**firstpath(char **env)
 {
@@ -41,47 +41,43 @@ char	**firstpath(char **env)
 	return (path);
 }
 
-void	execc(char **path, char **argv, char **env)
+void	ft_fork(char **env, char **path, char *argv, t_data *fd)
 {
-	int		i;
-	char	*cmd;
-	char	**argvcmd;
-
-	i = -1;
-	argvcmd = ft_split(argv[2], ' ');
-	execve(argvcmd[0], argvcmd, env);
-	while (path[++i])
+	int	x;
+	
+	x = 0;
+	if (fd->i == 0)
 	{
-		cmd = ft_strjoin(path[i], argvcmd[0]);
-		if (ft_strnstr(argvcmd[0], "./", ft_strlen(cmd)) && access(cmd, F_OK))
-			exit(0);
-		execve(cmd, argvcmd, env);
-		free(cmd);
+		dup2(fd->infile, STDIN_FILENO);
+		dup2(fd->end[1], STDOUT_FILENO);
+		close(fd->infile);
 	}
-	if (path[i] == NULL)
-		falsepath(argvcmd[0]);
-	ft_putstr_fd("pipex: Command not found: ", 2);
-	ft_putendl_fd(argvcmd[0], 2);
-	exit(127);
-}
-
-void	firstchild(char **env, char **path, char **argv, t_data fd)
-{
-	close(fd.end[0]);
-	dup2(fd.infile, STDIN_FILENO);
-	dup2(fd.end[1], STDOUT_FILENO);
+	else if (fd->i + 2 == fd->j - 2)
+	{
+		dup2(fd->prev_fd, STDIN_FILENO);
+		dup2(fd->outfile, STDOUT_FILENO);
+		close(fd->prev_fd);
+	}
+	else
+	{
+		dup2(fd->prev_fd, STDIN_FILENO);
+		close(fd->prev_fd);
+		dup2(fd->end[1], STDOUT_FILENO);
+	}
+	close(fd->end[1]);
+	close(fd->end[0]);
 	path = firstpath(env);
 	execc(path, argv, env);
 }
 
-void	execc2(char **path, char **argv, char **env)
+void	execc(char **path, char *argv, char **env)
 {
 	int		i;
 	char	*cmd;
 	char	**argvcmd;
 
 	i = -1;
-	argvcmd = ft_split(argv[3], ' ');
+	argvcmd = ft_split(argv, ' ');
 	execve(argvcmd[0], argvcmd, env);
 	while (path[++i])
 	{
@@ -98,13 +94,17 @@ void	execc2(char **path, char **argv, char **env)
 	exit(127);
 }
 
-void	secondchild(char **env, char **path, char **argv, t_data fd)
+void	falsepath(char *cmd)
 {
-	close(fd.infile);
-	close(fd.end[1]);
-	dup2(fd.end[0], STDIN_FILENO);
-	close(fd.end[0]);
-	dup2(fd.outfile, STDOUT_FILENO);
-	path = firstpath(env);
-	execc2(path, argv, env);
+	if (ft_strnstr(cmd, "/", ft_strlen(cmd)))
+	{
+		if (access(cmd, F_OK) == 0)
+		{
+			if (access(cmd, R_OK) == 0)
+				exit(0);
+			ft_putstr_fd(cmd, 2);
+			ft_putstr_fd(": permission denied.\n", 2);
+			exit(126);
+		}
+	}
 }

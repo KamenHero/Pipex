@@ -6,17 +6,25 @@
 /*   By: oryadi <oryadi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/04 23:02:19 by oryadi            #+#    #+#             */
-/*   Updated: 2023/02/10 00:20:51 by oryadi           ###   ########.fr       */
+/*   Updated: 2023/02/13 22:38:31 by oryadi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
+void	ft_fderror(t_data fd)
+{
+	if (fd.infile < 0 || fd.outfile < 0)
+	{
+		perror("");
+		exit (0);
+	}
+}
+
 int	main(int argc, char **argv, char **env)
 {
 	t_data	fd;
 	pid_t	i;
-	int		status;
 	pid_t	j;
 	char	**path;
 
@@ -27,8 +35,7 @@ int	main(int argc, char **argv, char **env)
 	path = NULL;
 	fd.infile = open(argv[1], O_RDONLY, 0644);
 	fd.outfile = open(argv[4], O_CREAT | O_WRONLY | O_TRUNC, 0644);
-	if (fd.infile < 0 || fd.outfile < 0)
-		perror("Error: fd");
+	ft_fderror(fd);
 	i = fork();
 	if (i < 0)
 		perror("Error : fork1");
@@ -37,6 +44,8 @@ int	main(int argc, char **argv, char **env)
 	else
 		j = ft_fork(env, path, argv, fd);
 	close(fd.end[1]);
-	waitpid(j, &status, 0);
-	exit(WEXITSTATUS(status));
+	close(fd.end[0]);
+	while (wait(NULL) != -1)
+		;
+	return (0);
 }
