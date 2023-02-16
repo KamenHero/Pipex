@@ -6,7 +6,7 @@
 /*   By: oryadi <oryadi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/11 21:26:41 by oryadi            #+#    #+#             */
-/*   Updated: 2023/02/13 22:12:17 by oryadi           ###   ########.fr       */
+/*   Updated: 2023/02/16 20:21:50 by oryadi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,16 +43,13 @@ char	**firstpath(char **env)
 
 void	ft_fork(char **env, char **path, char *argv, t_data *fd)
 {
-	int	x;
-	
-	x = 0;
-	if (fd->i == 0)
+	if (fd->i == 0 || (fd->x == 1 && fd->i == 1))
 	{
 		dup2(fd->infile, STDIN_FILENO);
 		dup2(fd->end[1], STDOUT_FILENO);
 		close(fd->infile);
 	}
-	else if (fd->i + 2 == fd->j - 2)
+	else if ((fd->x == 1 && fd->i + 3 == fd->j - 2) || fd->i + 2 == fd->j - 2)
 	{
 		dup2(fd->prev_fd, STDIN_FILENO);
 		dup2(fd->outfile, STDOUT_FILENO);
@@ -83,7 +80,7 @@ void	execc(char **path, char *argv, char **env)
 	{
 		cmd = ft_strjoin(path[i], argvcmd[0]);
 		if (ft_strnstr(argvcmd[0], "./", ft_strlen(cmd)) && access(cmd, F_OK))
-			exit(0);
+			ft_error(argvcmd);
 		execve(cmd, argvcmd, env);
 		free(cmd);
 	}
@@ -101,7 +98,7 @@ void	falsepath(char *cmd)
 		if (access(cmd, F_OK) == 0)
 		{
 			if (access(cmd, R_OK) == 0)
-				exit(0);
+				ft_error(&cmd);
 			ft_putstr_fd(cmd, 2);
 			ft_putstr_fd(": permission denied.\n", 2);
 			exit(126);

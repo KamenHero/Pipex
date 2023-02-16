@@ -9,6 +9,10 @@ SRCS = 	pipex.c\
 
 SRCS_BONUS = ./bonus/pipex_bonus.c\
 			 ./bonus/utils_bonus.c\
+			 ./bonus/utils_bonus2.c\
+			 ./bonus/here_doc.c\
+			 ./bonus/get_next_line.c\
+			 ./bonus/get_next_line_utils.c\
 
 OBJ = $(SRCS:.c=.o)
 

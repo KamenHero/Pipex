@@ -6,7 +6,7 @@
 /*   By: oryadi <oryadi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/04 23:03:05 by oryadi            #+#    #+#             */
-/*   Updated: 2023/02/13 21:47:47 by oryadi           ###   ########.fr       */
+/*   Updated: 2023/02/16 20:41:31 by oryadi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void	execc(char **path, char **argv, char **env)
 	{
 		cmd = ft_strjoin(path[i], argvcmd[0]);
 		if (ft_strnstr(argvcmd[0], "./", ft_strlen(cmd)) && access(cmd, F_OK))
-			exit(0);
+			ft_error(argvcmd);
 		execve(cmd, argvcmd, env);
 		free(cmd);
 	}
@@ -87,7 +87,7 @@ void	execc2(char **path, char **argv, char **env)
 	{
 		cmd = ft_strjoin(path[i], argvcmd[0]);
 		if (ft_strnstr(argvcmd[0], "./", ft_strlen(cmd)) && access(cmd, F_OK))
-			exit(0);
+			ft_error(argvcmd);
 		execve(cmd, argvcmd, env);
 		free(cmd);
 	}

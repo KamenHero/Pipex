@@ -6,7 +6,7 @@
 /*   By: oryadi <oryadi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/10 20:30:57 by oryadi            #+#    #+#             */
-/*   Updated: 2023/02/13 22:46:34 by oryadi           ###   ########.fr       */
+/*   Updated: 2023/02/16 20:28:54 by oryadi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,7 @@ int	main(int argc, char **argv, char **env)
 	if (argc < 5)
 		(ft_putendl_fd("Arguments must be more than 5", 2), exit(1));
 	path = NULL;
-	ft_initialfds(&fd, path, argv, argc);
-	ft_fderror(fd);
+	(ft_initialfds(&fd, path, argv, argc), ft_fderror(fd));
 	while (++fd.i + 2 < argc - 1)
 	{
 		pipe(fd.end);
@@ -45,8 +44,18 @@ void	ft_initialfds(t_data *fd, char **path, char **argv, int argc)
 	fd->j = argc;
 	path = NULL;
 	fd->prev_fd = -1;
-	fd->infile = open(argv[1], O_RDONLY, 0644);
-	fd->outfile = open(argv[argc - 1], O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	if (!ft_strcmp(argv[1], "here_doc"))
+	{
+		ft_here_doc(fd, argv);
+		fd->x = 1;
+		fd->outfile = open(argv[argc - 1], O_CREAT | O_WRONLY | O_APPEND, 0644);
+	}
+	else
+	{
+		fd->x = 0;
+		fd->infile = open(argv[1], O_RDONLY, 0644);
+		fd->outfile = open(argv[argc - 1], O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	}
 }
 
 int	ft_access(char *argv)

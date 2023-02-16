@@ -6,7 +6,7 @@
 /*   By: oryadi <oryadi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/04 23:03:37 by oryadi            #+#    #+#             */
-/*   Updated: 2023/02/10 00:11:33 by oryadi           ###   ########.fr       */
+/*   Updated: 2023/02/16 20:38:29 by oryadi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,5 +33,6 @@ void	firstchild(char **env, char **path, char **argv, t_data fd);
 void	secondchild(char **env, char **path, char **argv, t_data fd);
 pid_t	ft_fork(char **env, char **path, char **argv, t_data fd);
 void	falsepath(char *cmd);
+void	ft_error(char **argvcmd);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: oryadi <oryadi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/04 23:02:19 by oryadi            #+#    #+#             */
-/*   Updated: 2023/02/13 22:38:31 by oryadi           ###   ########.fr       */
+/*   Updated: 2023/02/16 20:41:37 by oryadi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@ void	ft_fderror(t_data fd)
 {
 	if (fd.infile < 0 || fd.outfile < 0)
 	{
-		perror("");
-		exit (0);
+		perror("pipex");
+		exit(0);
 	}
 }
 
@@ -38,7 +38,7 @@ int	main(int argc, char **argv, char **env)
 	ft_fderror(fd);
 	i = fork();
 	if (i < 0)
-		perror("Error : fork1");
+		(perror(""), exit(0));
 	else if (i == 0)
 		firstchild(env, path, argv, fd);
 	else
