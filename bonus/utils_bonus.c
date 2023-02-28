@@ -6,7 +6,7 @@
 /*   By: oryadi <oryadi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/11 21:26:41 by oryadi            #+#    #+#             */
-/*   Updated: 2023/02/16 20:21:50 by oryadi           ###   ########.fr       */
+/*   Updated: 2023/02/16 23:33:06 by oryadi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ void	ft_fork(char **env, char **path, char *argv, t_data *fd)
 {
 	if (fd->i == 0 || (fd->x == 1 && fd->i == 1))
 	{
+		if (fd->infile == -1)
+			exit(1);
 		dup2(fd->infile, STDIN_FILENO);
 		dup2(fd->end[1], STDOUT_FILENO);
 		close(fd->infile);
@@ -79,13 +81,10 @@ void	execc(char **path, char *argv, char **env)
 	while (path[++i])
 	{
 		cmd = ft_strjoin(path[i], argvcmd[0]);
-		if (ft_strnstr(argvcmd[0], "./", ft_strlen(cmd)) && access(cmd, F_OK))
-			ft_error(argvcmd);
+		falsepath(argvcmd[0]);
 		execve(cmd, argvcmd, env);
 		free(cmd);
-	}
-	if (path[i] == NULL)
-		falsepath(argvcmd[0]);
+	}	
 	ft_putstr_fd("pipex: Command not found: ", 2);
 	ft_putendl_fd(argvcmd[0], 2);
 	exit(127);
@@ -97,11 +96,14 @@ void	falsepath(char *cmd)
 	{
 		if (access(cmd, F_OK) == 0)
 		{
-			if (access(cmd, R_OK) == 0)
-				ft_error(&cmd);
-			ft_putstr_fd(cmd, 2);
-			ft_putstr_fd(": permission denied.\n", 2);
-			exit(126);
+			if (access(cmd, R_OK) != 0 || access(cmd, X_OK) != 0)
+			{
+				ft_putstr_fd("pipex: permission denied: ", 2);
+				ft_putendl_fd(cmd, 2);
+				exit(126);
+			}
+			else
+				ft_error(0);
 		}
 	}
 }

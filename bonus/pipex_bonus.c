@@ -6,7 +6,7 @@
 /*   By: oryadi <oryadi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/10 20:30:57 by oryadi            #+#    #+#             */
-/*   Updated: 2023/02/16 20:28:54 by oryadi           ###   ########.fr       */
+/*   Updated: 2023/02/16 23:07:27 by oryadi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,12 @@ int	main(int argc, char **argv, char **env)
 	t_data	fd;
 	pid_t	j;
 	char	**path;
+	int		status;
 
 	if (argc < 5)
 		(ft_putendl_fd("Arguments must be more than 5", 2), exit(1));
 	path = NULL;
-	(ft_initialfds(&fd, path, argv, argc), ft_fderror(fd));
+	(ft_initialfds(&fd, path, argv, argc), ft_fderror(fd, argv));
 	while (++fd.i + 2 < argc - 1)
 	{
 		pipe(fd.end);
@@ -33,8 +34,10 @@ int	main(int argc, char **argv, char **env)
 			close(fd.prev_fd);
 		fd.prev_fd = fd.end[0];
 	}
+	waitpid(j, &status, 0);
 	while (wait(NULL) != -1)
 		;
+	exit(WEXITSTATUS(status));
 	return (0);
 }
 
@@ -70,9 +73,14 @@ int	ft_access(char *argv)
 	return (1);
 }
 
-void	ft_fderror(t_data fd)
+void	ft_fderror(t_data fd, char **argv)
 {
-	if (fd.infile < 0 || fd.outfile < 0)
+	if (fd.infile < 0 )
+	{
+		ft_putstr_fd("pipex: no such file or directory: ", 2);
+		ft_putendl_fd(argv[1], 2);
+	}
+	if (fd.outfile < 0)
 	{
 		perror("");
 		exit(0);

@@ -6,7 +6,7 @@
 /*   By: oryadi <oryadi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/14 15:05:51 by oryadi            #+#    #+#             */
-/*   Updated: 2023/02/16 20:28:04 by oryadi           ###   ########.fr       */
+/*   Updated: 2023/02/28 17:11:26 by oryadi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ void	ft_here_doc(t_data *fd, char **argv)
 	{
 		write(1, "heredoc> ", 9);
 		line = get_next_line(0);
+		if (line == NULL)
+			exit(555);
 		if (ft_strcmp(line, del) == 0)
 		{
 			free (line);

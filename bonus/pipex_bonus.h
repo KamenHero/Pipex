@@ -6,7 +6,7 @@
 /*   By: oryadi <oryadi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/10 20:31:53 by oryadi            #+#    #+#             */
-/*   Updated: 2023/02/16 20:30:00 by oryadi           ###   ########.fr       */
+/*   Updated: 2023/02/16 23:04:07 by oryadi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void		secondchild(char **env, char **path, char **argv, t_data fd);
 void		ft_fork(char **env, char **path, char *argv, t_data *fd);
 void		falsepath(char *cmd);
 int			ft_access(char *argv);
-void		ft_fderror(t_data fd);
+void		ft_fderror(t_data fd, char **argv);
 void		ft_initialfds(t_data *fd, char **path, char **argv, int argc);
 void		ft_error(char **argvcmd);
 void		ft_here_doc(t_data *fd, char **argv);
